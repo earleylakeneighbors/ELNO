@@ -39,6 +39,10 @@ export const metadata: Metadata = {
     images: ["/images/hero-lake.jpg"],
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -48,6 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     name: SITE.name,
     description: SITE.description,
     url: SITE.url,
+    logo: `${SITE.url}/images/elno-logo.png`,
     areaServed: {
       "@type": "AdministrativeArea",
       name: "Burnsville, MN",

@@ -132,13 +132,21 @@ export async function contactAction(
     };
   }
 
-  await createMessage({
-    name: parsed.data.name,
-    email: parsed.data.email.toLowerCase(),
-    phone: parsed.data.phone || null,
-    subject: parsed.data.subject,
-    message: parsed.data.message,
-  });
+  try {
+    await createMessage({
+      name: parsed.data.name,
+      email: parsed.data.email.toLowerCase(),
+      phone: parsed.data.phone || null,
+      subject: parsed.data.subject,
+      message: parsed.data.message,
+    });
+  } catch (err) {
+    console.error("contactAction createMessage", err);
+    return {
+      success: false,
+      error: "We couldn't send your message right now. Please try again shortly.",
+    };
+  }
 
   return {
     success: true,

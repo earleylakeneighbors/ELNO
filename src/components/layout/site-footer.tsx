@@ -22,7 +22,7 @@ export async function SiteFooter() {
         <div>
           <div className="flex items-center gap-3">
             <Image
-              src="/images/logo-mark.png"
+              src="/images/elno-logo.png"
               alt=""
               width={36}
               height={36}

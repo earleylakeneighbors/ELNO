@@ -227,18 +227,28 @@ export async function updateMessageStatusAction(
   status: MessageStatus,
 ): Promise<ActionResult> {
   await requireAdmin();
-  const updated = await updateMessageStatus(id, status);
-  return updated
-    ? { success: true, message: "Message updated." }
-    : { success: false, error: "Message not found." };
+  try {
+    const updated = await updateMessageStatus(id, status);
+    return updated
+      ? { success: true, message: "Message updated." }
+      : { success: false, error: "Message not found." };
+  } catch (err) {
+    console.error("updateMessageStatusAction", err);
+    return { success: false, error: "Could not update message." };
+  }
 }
 
 export async function deleteMessageAction(id: string): Promise<ActionResult> {
   await requireAdmin();
-  const ok = await deleteMessage(id);
-  return ok
-    ? { success: true, message: "Message deleted." }
-    : { success: false, error: "Could not delete message." };
+  try {
+    const ok = await deleteMessage(id);
+    return ok
+      ? { success: true, message: "Message deleted." }
+      : { success: false, error: "Could not delete message." };
+  } catch (err) {
+    console.error("deleteMessageAction", err);
+    return { success: false, error: "Could not delete message." };
+  }
 }
 
 export async function saveMediaAction(

@@ -18,11 +18,11 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm">
         <div className="flex flex-col items-center text-center">
           <Image
-            src="/images/logo-mark.png"
+            src="/images/elno-logo.png"
             alt=""
             width={56}
             height={56}
-            className="rounded-full"
+            className="rounded-full object-cover"
           />
           <h1 className="mt-4 font-display text-2xl">Admin sign in</h1>
           <p className="mt-2 text-sm text-muted-foreground">

@@ -65,11 +65,11 @@ export function AdminNav() {
       <aside className="hidden w-60 shrink-0 border-r border-border bg-card md:block">
         <div className="flex h-16 items-center gap-2 border-b border-border px-4">
           <Image
-            src="/images/logo-mark.png"
+            src="/images/elno-logo.png"
             alt=""
             width={28}
             height={28}
-            className="rounded-full"
+            className="rounded-full object-cover"
           />
           <div>
             <p className="text-sm font-medium leading-tight">Earley Lake</p>

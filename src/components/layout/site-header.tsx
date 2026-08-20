@@ -40,7 +40,7 @@ export function SiteHeader() {
           onClick={() => setOpen(false)}
         >
           <Image
-            src="/images/logo-mark.png"
+            src="/images/elno-logo.png"
             alt=""
             width={40}
             height={40}

@@ -1,19 +1,21 @@
 import type {
-  ContactMessage,
   ContentStatus,
-  DashboardStats,
   Event,
   MediaItem,
-  MessageStatus,
   NewsPost,
   SiteSettings,
 } from "@/lib/types";
 import { newId, store } from "./mock/store";
-import { getSubscribers } from "./subscribers";
 import {
   isAdminAuthenticated as cookieIsAdminAuthenticated,
   setAdminSession as cookieSetAdminSession,
 } from "@/lib/auth/admin-session";
+
+export {
+  getDashboardStats,
+  getUpcomingEventsLive,
+  isDashboardLive,
+} from "./dashboard";
 
 // ——— Settings ———
 
@@ -186,42 +188,13 @@ export {
 export type { SubscriberSort, ListSubscribersOptions } from "./subscribers";
 
 // ——— Messages ———
-
-export async function getMessages(): Promise<ContactMessage[]> {
-  return store.messages
-    .slice()
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .map((m) => structuredClone(m));
-}
-
-export async function createMessage(
-  data: Omit<ContactMessage, "id" | "created_at" | "status">,
-): Promise<ContactMessage> {
-  const message: ContactMessage = {
-    ...data,
-    id: newId("msg"),
-    status: "unread",
-    created_at: new Date().toISOString(),
-  };
-  store.messages.unshift(message);
-  return structuredClone(message);
-}
-
-export async function updateMessageStatus(
-  id: string,
-  status: MessageStatus,
-): Promise<ContactMessage | null> {
-  const idx = store.messages.findIndex((m) => m.id === id);
-  if (idx === -1) return null;
-  store.messages[idx] = { ...store.messages[idx], status };
-  return structuredClone(store.messages[idx]);
-}
-
-export async function deleteMessage(id: string): Promise<boolean> {
-  const before = store.messages.length;
-  store.messages = store.messages.filter((m) => m.id !== id);
-  return store.messages.length < before;
-}
+export {
+  getMessages,
+  createMessage,
+  updateMessageStatus,
+  deleteMessage,
+  countUnreadMessages,
+} from "./messages";
 
 // ——— Media ———
 
@@ -267,21 +240,7 @@ export async function deleteMedia(id: string): Promise<boolean> {
   return store.media.length < before;
 }
 
-// ——— Dashboard ———
-
-export async function getDashboardStats(): Promise<DashboardStats> {
-  const now = Date.now();
-  const subscribers = await getSubscribers();
-  return {
-    subscribers: subscribers.length,
-    upcomingEvents: store.events.filter(
-      (e) => e.status === "published" && new Date(e.start_at).getTime() >= now,
-    ).length,
-    publishedNews: store.news.filter((n) => n.status === "published").length,
-    unreadMessages: store.messages.filter((m) => m.status === "unread").length,
-    galleryImages: store.media.length,
-  };
-}
+// ——— Dashboard (see ./dashboard.ts) ———
 
 // ——— Auth session (httpOnly cookie) ———
 
