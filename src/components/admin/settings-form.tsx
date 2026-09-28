@@ -130,7 +130,9 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           <Label htmlFor="signup_notify_email">New signup notifications</Label>
           <Input type="email" required {...bind("signup_notify_email")} />
           <p className="text-xs text-muted-foreground">
-            Receives an email when someone joins the email list.
+            Signup details are sent to this address (not to the person who signed up). Look for
+            subject lines starting with &quot;New email list signup&quot;. The subscriber still
+            receives the welcome email separately.
           </p>
         </div>
       </Section>

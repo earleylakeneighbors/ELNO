@@ -7,11 +7,22 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions) {
   const d = typeof date === "string" ? new Date(date) : date;
+  if (Number.isNaN(d.getTime())) {
+    return "Unknown date";
+  }
+
+  const opts = options ?? {};
+  const usesStyle = "dateStyle" in opts || "timeStyle" in opts;
+
+  if (usesStyle) {
+    return d.toLocaleString("en-US", opts);
+  }
+
   return d.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
-    ...options,
+    ...opts,
   });
 }
 

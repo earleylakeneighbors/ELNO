@@ -87,8 +87,13 @@ export async function subscribeAction(
       firstName: parsed.data.first_name.trim(),
     });
 
-    const notifyTo = await getSignupNotifyEmail();
-    await sendSignupAdminNotifyEmail({ to: notifyTo, subscriber });
+    try {
+      const notifyTo = await getSignupNotifyEmail();
+      const notifyResult = await sendSignupAdminNotifyEmail({ to: notifyTo, subscriber });
+      console.info(`signup admin notify attempt to=${notifyTo} ok=${notifyResult.ok}`);
+    } catch (notifyErr) {
+      console.error("signup admin notify pipeline failed", notifyErr);
+    }
 
     return { success: true, message: "You're on the list — welcome to Earley Lake!" };
   } catch (err) {
