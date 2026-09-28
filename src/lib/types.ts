@@ -91,3 +91,12 @@ export interface DashboardStats {
   unreadMessages: number;
   galleryImages: number;
 }
+
+export interface CronKeepaliveLog {
+  id: string;
+  created_at: string;
+  success: boolean;
+  authorized: boolean;
+  has_row: boolean | null;
+  detail: string | null;
+}

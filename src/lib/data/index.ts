@@ -196,6 +196,14 @@ export {
   countUnreadMessages,
 } from "./messages";
 
+export {
+  insertCronKeepaliveLog,
+  listCronKeepaliveLogs,
+  isCronKeepaliveLogsConfigured,
+  CRON_KEEPALIVE_LOG_PAGE_SIZE,
+} from "./cron-keepalive-logs";
+export type { CronKeepaliveLogInsert, CronKeepaliveLogListResult } from "./cron-keepalive-logs";
+
 // ——— Media ———
 
 export async function getMedia(): Promise<MediaItem[]> {

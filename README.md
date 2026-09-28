@@ -36,6 +36,7 @@ Copy `.env.example` to `.env.local`:
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only key (never `NEXT_PUBLIC_`) |
+| `CRON_SECRET` | Vercel Cron auth for `/api/cron/supabase-keepalive` (server-only; set in Vercel, not committed) |
 | `RESEND_API_KEY` | Resend API key for transactional email (server-only) |
 | `RESEND_FROM_EMAIL` | Optional verified From address |
 
