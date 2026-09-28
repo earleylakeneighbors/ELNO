@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CronKeepaliveLogSection } from "@/components/admin/cron-keepalive-log";
 import { SettingsForm } from "@/components/admin/settings-form";
+import { PageHeader } from "@/components/admin/page-header";
 import {
   CRON_KEEPALIVE_LOG_PAGE_SIZE,
   getSettings,
@@ -35,17 +36,13 @@ export default async function AdminSettingsPage({ searchParams }: PageProps) {
   ]);
 
   return (
-    <div>
-      <header>
-        <h1 className="font-display text-3xl">Settings</h1>
-        <p className="mt-2 text-muted-foreground">
-          Organization details and social links. Leave social URLs blank until you have real
-          accounts.
-        </p>
-      </header>
-      <div className="mt-8">
-        <SettingsForm settings={settings} />
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="System"
+        title="Settings"
+        description="Organization details, social links, and database health."
+      />
+      <SettingsForm settings={settings} />
       <CronKeepaliveLogSection
         result={keepaliveLogs}
         supabaseConfigured={isCronKeepaliveLogsConfigured()}

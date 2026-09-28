@@ -1,64 +1,69 @@
 import Link from "next/link";
+import { formatDistanceToNowStrict } from "date-fns";
+import { ArrowRight } from "lucide-react";
 import type { ContactMessage } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { Avatar } from "@/components/ui/avatar";
+import { StatusPill } from "@/components/ui/status-pill";
+import { EmptyState } from "@/components/admin/page-header";
 
-type Props = {
-  messages: ContactMessage[];
-};
-
-export function DashboardRecentMessages({ messages }: Props) {
+export function DashboardRecentMessages({ messages }: { messages: ContactMessage[] }) {
   return (
     <section className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="font-display text-xl text-foreground">Recent messages</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Contact form submissions from the website
-          </p>
+          <p className="mt-0.5 text-sm text-muted-foreground">From the website contact form</p>
         </div>
-        <Button asChild variant="outline" size="sm" className="shrink-0">
-          <Link href="/admin/messages">View all</Link>
-        </Button>
+        <Link
+          href="/admin/messages"
+          className="group inline-flex items-center gap-1 text-sm font-medium text-primary"
+        >
+          Inbox
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       </div>
 
       {messages.length === 0 ? (
-        <div className="mt-6 flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
-          <p className="text-sm font-medium text-foreground">No messages yet</p>
-          <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-            When neighbors use the contact form, their notes will show up here.
-          </p>
-        </div>
+        <EmptyState
+          illustration="inbox"
+          title="No messages yet"
+          description="When neighbors use the contact form, their notes will show up here."
+          className="mt-5 flex-1 border-0 bg-muted/30"
+        />
       ) : (
-        <ul className="mt-5 divide-y divide-border">
-          {messages.map((m) => (
-            <li key={m.id}>
-              <Link
-                href="/admin/messages"
-                className="flex items-start justify-between gap-3 py-3.5 transition-colors hover:bg-muted/40 -mx-2 rounded-lg px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium text-foreground">{m.subject}</p>
-                  <p className="mt-1 truncate text-sm text-muted-foreground">
-                    {m.name} · {formatDate(m.created_at)}
-                  </p>
-                </div>
-                <Badge
-                  variant={
-                    m.status === "unread"
-                      ? "warning"
-                      : m.status === "replied"
-                        ? "success"
-                        : "secondary"
-                  }
-                  className="shrink-0"
+        <ul className="mt-4 -mx-2 space-y-0.5">
+          {messages.map((m) => {
+            const unread = m.status === "unread";
+            return (
+              <li key={m.id}>
+                <Link
+                  href="/admin/messages"
+                  className="group flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  {m.status}
-                </Badge>
-              </Link>
-            </li>
-          ))}
+                  <span className="relative">
+                    <Avatar name={m.name} seed={m.email} />
+                    {unread ? (
+                      <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-card bg-amber-500" />
+                    ) : null}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className={unread ? "truncate text-sm font-semibold" : "truncate text-sm font-medium"}>
+                        {m.name}
+                      </span>
+                      <span className="shrink-0 text-[11px] text-muted-foreground">
+                        {formatDistanceToNowStrict(new Date(m.created_at), { addSuffix: true })}
+                      </span>
+                    </span>
+                    <span className="block truncate text-sm text-muted-foreground">{m.subject}</span>
+                  </span>
+                  {m.status === "replied" ? (
+                    <StatusPill tone="success" className="hidden sm:inline-flex">replied</StatusPill>
+                  ) : null}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>

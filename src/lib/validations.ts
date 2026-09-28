@@ -60,6 +60,7 @@ export const settingsSchema = z.object({
   tagline: z.string().max(240),
   location: z.string().max(120),
   contact_email: z.union([z.string().email(), z.literal("")]),
+  signup_notify_email: z.string().email("Enter a valid notification email"),
   facebook_url: z.union([z.string().url(), z.literal("")]),
   instagram_url: z.union([z.string().url(), z.literal("")]),
   twitter_url: z.union([z.string().url(), z.literal("")]),

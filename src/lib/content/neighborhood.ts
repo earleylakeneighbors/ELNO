@@ -13,6 +13,13 @@ export const BOUNDARIES = [
   "County Road 5 (west)",
 ] as const;
 
+/** "143rd St W (north)" → { road: "143rd St W", side: "North" } */
+export function parseBoundary(entry: string) {
+  const match = entry.match(/^(.*)\s+\((\w+)\)$/);
+  if (!match) return { road: entry, side: "" };
+  return { road: match[1], side: match[2][0].toUpperCase() + match[2].slice(1) };
+}
+
 export const BOUNDARIES_SUMMARY =
   "Our neighborhood boundaries are: 143rd St W (north) • Burnhaven Dr (east) • Southcross Dr (south) • County Road 5 (west).";
 

@@ -12,6 +12,7 @@ export const defaultSettings: SiteSettings = {
   tagline: "Our Lake. Our Neighborhood. Our Community.",
   location: "Burnsville, MN",
   contact_email: "info@earleylakeneighbors.org",
+  signup_notify_email: "admin@earleylakeneighbors.org",
   facebook_url: "",
   instagram_url: "",
   twitter_url: "",

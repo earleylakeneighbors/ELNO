@@ -16,7 +16,16 @@ export type CronKeepaliveLogListResult = {
   page: number;
   pageSize: number;
   totalPages: number;
+  /** True when the cron_keepalive_logs table is not deployed yet. */
+  setupRequired?: boolean;
 };
+
+function isMissingKeepaliveTableError(message: string): boolean {
+  return (
+    message.includes("cron_keepalive_logs") &&
+    (message.includes("schema cache") || message.includes("does not exist"))
+  );
+}
 
 function useLiveLogs(): boolean {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -79,7 +88,19 @@ export async function listCronKeepaliveLogs(options: {
     .order("created_at", { ascending: false })
     .range(from, to);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (isMissingKeepaliveTableError(error.message)) {
+      return {
+        rows: [],
+        total: 0,
+        page: 1,
+        pageSize,
+        totalPages: 0,
+        setupRequired: true,
+      };
+    }
+    throw new Error(error.message);
+  }
 
   const total = count ?? 0;
   const totalPages = total === 0 ? 0 : Math.ceil(total / pageSize);

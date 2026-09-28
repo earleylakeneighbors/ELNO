@@ -1,16 +1,30 @@
-import Link from "next/link";
-import Image from "next/image";
 import { HeroSection } from "@/components/home/hero-section";
-import { PossibleEventCard } from "@/components/home/possible-event-card";
-import { NewsCard } from "@/components/home/news-card";
-import { GetInvolvedSection } from "@/components/home/get-involved";
-import { SubscribeForm } from "@/components/forms/subscribe-form";
-import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/motion/reveal";
-import { WildlifeGrid } from "@/components/about/wildlife-grid";
+import { JoinSection } from "@/components/home/join-section";
+import { ScrollTextReveal } from "@/components/site/scroll-text-reveal";
+import { ParallaxImage } from "@/components/site/parallax-image";
+import { HoverImageList } from "@/components/site/hover-image-list";
+import { WildlifeMosaic } from "@/components/site/wildlife-mosaic";
+import { NewsIndex } from "@/components/site/news-index";
+import { NeighborhoodMap } from "@/components/site/neighborhood-map";
+import { ArrowLink, Eyebrow } from "@/components/site/arrow-link";
 import { possibleEvents } from "@/lib/content/possible-events";
 import { MISSION, VISION, WILDLIFE_GALLERY } from "@/lib/content/neighborhood";
 import { getPublishedNews } from "@/lib/data";
+
+const COMMITMENTS = [
+  {
+    title: "Bring neighbors together",
+    body: "Block parties, meetups, and the small moments that turn a set of streets into a neighborhood.",
+  },
+  {
+    title: "Care for the lake",
+    body: "Shoreline cleanups and a shared commitment to protect the natural environment around Earley Lake.",
+  },
+  {
+    title: "Keep it welcoming",
+    body: "A safe, inclusive place where newcomers and longtime residents feel equally at home.",
+  },
+];
 
 export default async function HomePage() {
   const news = await getPublishedNews(3);
@@ -19,155 +33,101 @@ export default async function HomePage() {
     <>
       <HeroSection />
 
-      <Reveal as="section" className="section-atmosphere py-20">
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+      {/* Who we are */}
+      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-36">
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-3">
+            <Eyebrow>Who we are</Eyebrow>
+          </div>
+          <div className="lg:col-span-9">
+            <ScrollTextReveal
+              text={MISSION}
+              className="font-display text-[clamp(1.75rem,3.4vw,3rem)] font-light leading-[1.18] tracking-[-0.015em] text-foreground"
+            />
+            <ArrowLink href="/about" className="mt-10">
+              More about the organization
+            </ArrowLink>
+          </div>
+        </div>
+
+        <div className="mt-24 grid gap-px overflow-hidden border-y border-foreground/15 bg-foreground/15 md:grid-cols-3 lg:mt-32">
+          {COMMITMENTS.map((c, i) => (
+            <div key={c.title} className="bg-background py-8 md:px-8 md:first:pl-0 md:last:pr-0">
+              <p className="font-display text-sm italic text-primary">{["i.", "ii.", "iii."][i]}</p>
+              <h3 className="mt-4 font-display text-2xl text-foreground">{c.title}</h3>
+              <p className="mt-3 max-w-sm leading-relaxed text-muted-foreground">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <ParallaxImage
+        src="/images/about-neighborhood.jpg"
+        alt="A tree-lined neighborhood street in autumn"
+        caption="Autumn in the neighborhood"
+        className="h-[55vh] min-h-[320px] lg:h-[80vh]"
+      />
+
+      {/* Gatherings */}
+      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
+        <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <h2 className="font-display text-3xl text-foreground sm:text-4xl">Who we are</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              {MISSION}
-            </p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              Whether you are new to the area or have lived here for years, you are welcome.
-              Join the email list, come to an event, or reach out — we are better when we
-              connect.
-            </p>
-            <Button asChild variant="outline" className="mt-6">
-              <Link href="/about">Learn more about us</Link>
-            </Button>
+            <Eyebrow>Gatherings</Eyebrow>
+            <h2 className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-light leading-[1.05] tracking-[-0.02em]">
+              What we&apos;re planning
+            </h2>
           </div>
-          <div className="img-soft-edge relative aspect-[4/3] overflow-hidden rounded-2xl">
-            <Image
-              src="/images/community-gathering.jpg"
-              alt="Neighbors gathering outdoors in a Minnesota community park"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-          </div>
-        </div>
-      </Reveal>
-
-      <Reveal as="section" className="section-atmosphere border-y border-border bg-card/40 py-20">
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="font-display text-3xl text-foreground sm:text-4xl">
-                Possible upcoming events
-              </h2>
-              <p className="mt-3 text-muted-foreground">
-                Here’s the kind of gatherings we’re planning—dates coming soon.
-              </p>
-            </div>
-            <Button asChild variant="outline">
-              <Link href="/events">View all events</Link>
-            </Button>
-          </div>
-          <Reveal stagger className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {possibleEvents.map((event) => (
-              <div key={event.id}>
-                <PossibleEventCard event={event} />
-              </div>
-            ))}
-          </Reveal>
-          <p className="mt-8 text-center text-sm text-muted-foreground">
-            Want to hear when dates are set?{" "}
-            <Link href="/join" className="font-medium text-primary hover:underline">
-              Join the email list
-            </Link>
-            .
+          <p className="max-w-sm text-muted-foreground">
+            Dates aren&apos;t set yet. Neighbors on the email list hear first when they are.
           </p>
         </div>
-      </Reveal>
+        <HoverImageList
+          className="mt-14"
+          items={possibleEvents.map((e) => ({ ...e, meta: "Date to come", href: "/events" }))}
+        />
+      </section>
 
-      <Reveal as="section" className="py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div className="img-soft-edge relative order-2 aspect-[4/3] overflow-hidden rounded-2xl lg:order-1">
-            <Image
-              src="/images/about-neighborhood.jpg"
-              alt="Tree-lined Minnesota neighborhood street in autumn"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-          </div>
-          <div className="order-1 lg:order-2">
-            <h2 className="font-display text-3xl text-foreground sm:text-4xl">Our vision</h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              {VISION}
-            </p>
-            <Button asChild variant="outline" className="mt-6">
-              <Link href="/about">Read more about us</Link>
-            </Button>
-          </div>
-        </div>
-      </Reveal>
-
-      <GetInvolvedSection />
-
-      <Reveal as="section" className="py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="font-display text-3xl text-foreground sm:text-4xl">
-                Latest announcements
+      {/* The place */}
+      <section className="bg-[#efece4]">
+        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
+          <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-5">
+              <Eyebrow>The place</Eyebrow>
+              <h2 className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-light leading-[1.05] tracking-[-0.02em]">
+                A special place <em className="font-normal">we share</em>
               </h2>
-              <p className="mt-3 text-muted-foreground">
-                Neighborhood updates and important notices.
-              </p>
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">{VISION}</p>
+              <ArrowLink href="/about" className="mt-8">
+                Boundaries and wildlife
+              </ArrowLink>
             </div>
-            <Button asChild variant="outline">
-              <Link href="/news">All news</Link>
-            </Button>
+            <div className="lg:col-span-7">
+              <NeighborhoodMap />
+            </div>
           </div>
-          <div className="mt-8 max-w-3xl">
-            {news.length === 0 ? (
-              <p className="text-muted-foreground">No announcements yet. Check back soon.</p>
-            ) : (
-              <Reveal stagger>
-                {news.map((post) => (
-                  <div key={post.id}>
-                    <NewsCard post={post} />
-                  </div>
-                ))}
-              </Reveal>
-            )}
-          </div>
+          <WildlifeMosaic items={WILDLIFE_GALLERY.slice(0, 6)} className="mt-20" />
         </div>
-      </Reveal>
+      </section>
 
-      <Reveal as="section" className="section-atmosphere border-t border-border bg-muted/40 py-20">
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+      {/* News */}
+      {news.length > 0 ? (
+        <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
+          <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <h2 className="font-display text-3xl text-foreground sm:text-4xl">
-                A Special Place We Share
+              <Eyebrow>From the neighborhood</Eyebrow>
+              <h2 className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-light leading-[1.05] tracking-[-0.02em]">
+                Latest news
               </h2>
-              <p className="mt-3 max-w-2xl text-muted-foreground">
-                Wildlife and seasonal beauty around Earley Lake — the natural heart of our
-                neighborhood.
-              </p>
             </div>
-            <Button asChild variant="outline">
-              <Link href="/about">See more on About</Link>
-            </Button>
+            <ArrowLink href="/news">All announcements</ArrowLink>
           </div>
-          <WildlifeGrid items={WILDLIFE_GALLERY.slice(0, 4)} className="mt-10" />
-        </div>
-      </Reveal>
+          <div className="mt-14">
+            <NewsIndex posts={news} />
+          </div>
+        </section>
+      ) : null}
 
-      <Reveal as="section" className="py-20">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl text-foreground sm:text-4xl">
-            Your neighborhood is stronger when neighbors connect.
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Join our email list for announcements, events, and ways to get involved.
-          </p>
-          <div className="mt-8 text-left">
-            <SubscribeForm />
-          </div>
-        </div>
-      </Reveal>
+      <JoinSection />
     </>
   );
 }

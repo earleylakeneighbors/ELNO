@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { NewsCard } from "@/components/home/news-card";
-import { Reveal } from "@/components/motion/reveal";
+import { Fragment } from "react";
+import { PageIntro } from "@/components/site/page-intro";
+import { NewsIndex } from "@/components/site/news-index";
+import { ArrowLink } from "@/components/site/arrow-link";
 import { getPublishedNews } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -12,26 +14,30 @@ export default async function NewsPage() {
   const posts = await getPublishedNews();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <Reveal as="header">
-        <h1 className="font-display text-4xl text-foreground sm:text-5xl">News</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Announcements, community updates, and important notices.
-        </p>
-      </Reveal>
-      <div className="mt-10">
+    <>
+      <PageIntro
+        eyebrow="News"
+        title={[
+          <Fragment key="1">Notes from</Fragment>,
+          <Fragment key="2">
+            <em className="font-normal">the neighborhood.</em>
+          </Fragment>,
+        ]}
+        lede="Announcements, community updates, and anything neighbors should know about."
+      />
+      <section className="mx-auto max-w-7xl px-5 pb-28 sm:px-8">
         {posts.length === 0 ? (
-          <p className="text-muted-foreground">No published announcements yet.</p>
+          <div className="border-y border-foreground/15 py-16">
+            <p className="font-display text-2xl text-foreground">Nothing posted yet.</p>
+            <p className="mt-2 text-muted-foreground">Announcements will appear here as they&apos;re published.</p>
+            <ArrowLink href="/join" className="mt-6">
+              Get them by email instead
+            </ArrowLink>
+          </div>
         ) : (
-          <Reveal stagger>
-            {posts.map((post) => (
-              <div key={post.id}>
-                <NewsCard post={post} />
-              </div>
-            ))}
-          </Reveal>
+          <NewsIndex posts={posts} />
         )}
-      </div>
-    </div>
+      </section>
+    </>
   );
 }

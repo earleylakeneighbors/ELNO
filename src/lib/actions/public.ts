@@ -4,7 +4,9 @@ import {
   createMessage,
   createSubscriber,
   findSubscriberByEmail,
+  getSignupNotifyEmail,
 } from "@/lib/data";
+import { sendSignupAdminNotifyEmail } from "@/lib/email/send-signup-admin-notify";
 import { sendWelcomeSubscriberEmail } from "@/lib/email/send-welcome";
 import { contactSchema, subscribeSchema, type ActionResult } from "@/lib/validations";
 
@@ -71,7 +73,7 @@ export async function subscribeAction(
       };
     }
 
-    await createSubscriber({
+    const subscriber = await createSubscriber({
       email: parsed.data.email.toLowerCase(),
       first_name: parsed.data.first_name.trim(),
       last_name: parsed.data.last_name?.trim() || null,
@@ -84,6 +86,9 @@ export async function subscribeAction(
       to: parsed.data.email.toLowerCase(),
       firstName: parsed.data.first_name.trim(),
     });
+
+    const notifyTo = await getSignupNotifyEmail();
+    await sendSignupAdminNotifyEmail({ to: notifyTo, subscriber });
 
     return { success: true, message: "You're on the list — welcome to Earley Lake!" };
   } catch (err) {

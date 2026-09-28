@@ -103,7 +103,7 @@ export function SubscribeForm({ compact = false }: { compact?: boolean }) {
           {state.error}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+      <Button type="submit" disabled={pending} size="lg" className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 sm:w-auto">
         {pending ? "Joining…" : "Join the email list"}
       </Button>
     </form>

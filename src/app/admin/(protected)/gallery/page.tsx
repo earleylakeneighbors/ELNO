@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ImagePlus } from "lucide-react";
 import { getMedia } from "@/lib/data";
 import { GalleryClient } from "@/components/admin/gallery-client";
+import { PageHeader } from "@/components/admin/page-header";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -11,16 +15,20 @@ export default async function AdminGalleryPage() {
   const media = await getMedia();
 
   return (
-    <div>
-      <header>
-        <h1 className="font-display text-3xl">Gallery</h1>
-        <p className="mt-2 text-muted-foreground">
-          Featured images appear on the public homepage gallery.
-        </p>
-      </header>
-      <div className="mt-8">
-        <GalleryClient media={media} />
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="Library"
+        title="Gallery"
+        description="Curate the photos neighbors see on the homepage."
+        actions={
+          <Button asChild variant="outline">
+            <Link href="/admin/media">
+              <ImagePlus className="h-4 w-4" /> Add media
+            </Link>
+          </Button>
+        }
+      />
+      <GalleryClient media={media} />
     </div>
   );
 }

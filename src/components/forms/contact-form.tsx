@@ -72,7 +72,7 @@ export function ContactForm() {
           {state.error}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending} size="lg" className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 sm:w-auto">
         {pending ? "Sending…" : "Send message"}
       </Button>
     </form>

@@ -47,6 +47,7 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
+  --color-warning: var(--warning);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
   --radius-sm: calc(var(--radius) - 4px);
@@ -247,5 +248,127 @@ h4 {
 
   .nav-link::after {
     transition: none;
+  }
+}
+
+/* ——— Admin UI motion & surfaces ——— */
+
+:root {
+  --warning: #b7791f;
+  --admin-surface: color-mix(in oklab, var(--card) 70%, var(--background));
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes dialog-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+}
+
+@keyframes sheet-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes sheet-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes border-beam {
+  to { offset-distance: 100%; }
+}
+
+@keyframes shimmer-sweep {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes wave-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+@keyframes glide {
+  from { transform: translateX(-40px); }
+  to { transform: translateX(calc(100% + 40px)); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.animate-overlay-in[data-state="open"] { animation: overlay-in 200ms var(--ease-out-soft) both; }
+.animate-overlay-in[data-state="closed"] { animation: overlay-out 150ms ease-in both; }
+.animate-dialog[data-state="open"] { animation: dialog-in 260ms var(--ease-out-expo) both; }
+.animate-dialog[data-state="closed"] { animation: dialog-out 150ms ease-in both; }
+.animate-sheet[data-state="open"] { animation: sheet-in 380ms var(--ease-out-expo) both; }
+.animate-sheet[data-state="closed"] { animation: sheet-out 200ms ease-in both; }
+
+.animate-wave { animation: wave-drift 18s linear infinite; }
+.animate-wave-slow { animation: wave-drift 32s linear infinite; }
+.animate-bob { animation: bob 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.animate-glide { animation: glide 38s linear infinite; }
+.animate-pulse-ring { animation: pulse-ring 1.8s var(--ease-out-soft) infinite; }
+
+.shimmer-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    color-mix(in oklab, var(--muted) 45%, var(--card)) 50%,
+    var(--muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 1.6s linear infinite;
+}
+
+.paper-surface {
+  background-color: #fffdf8;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--primary) 6%, transparent) 1px, transparent 1px);
+  background-size: 100% 1.75rem;
+  background-position: 0 1.3rem;
+}
+
+.admin-grid-bg {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--primary) 16%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave,
+  .animate-wave-slow,
+  .animate-bob,
+  .animate-glide,
+  .animate-pulse-ring,
+  .shimmer-skeleton {
+    animation: none !important;
   }
 }

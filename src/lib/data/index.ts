@@ -6,6 +6,7 @@ import type {
   SiteSettings,
 } from "@/lib/types";
 import { newId, store } from "./mock/store";
+import { getSignupNotifyEmail } from "./signup-notify-settings";
 import {
   isAdminAuthenticated as cookieIsAdminAuthenticated,
   setAdminSession as cookieSetAdminSession,
@@ -20,13 +21,20 @@ export {
 // ——— Settings ———
 
 export async function getSettings(): Promise<SiteSettings> {
-  return structuredClone(store.settings);
+  const settings = structuredClone(store.settings);
+  settings.signup_notify_email = await getSignupNotifyEmail();
+  return settings;
 }
 
 export async function updateSettings(patch: Partial<SiteSettings>): Promise<SiteSettings> {
-  store.settings = { ...store.settings, ...patch };
-  return structuredClone(store.settings);
+  const { signup_notify_email: _notify, ...mockPatch } = patch;
+  store.settings = { ...store.settings, ...mockPatch };
+  const settings = structuredClone(store.settings);
+  settings.signup_notify_email = await getSignupNotifyEmail();
+  return settings;
 }
+
+export { getSignupNotifyEmail, updateSignupNotifyEmail } from "./signup-notify-settings";
 
 // ——— Events ———
 

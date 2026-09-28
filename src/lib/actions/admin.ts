@@ -17,6 +17,7 @@ import {
   updateMessageStatus,
   updateNews,
   updateSettings,
+  updateSignupNotifyEmail,
 } from "@/lib/data";
 import { slugify } from "@/lib/utils";
 import {
@@ -306,6 +307,7 @@ export async function saveSettingsAction(
     tagline: String(formData.get("tagline") ?? ""),
     location: String(formData.get("location") ?? ""),
     contact_email: String(formData.get("contact_email") ?? ""),
+    signup_notify_email: String(formData.get("signup_notify_email") ?? ""),
     facebook_url: String(formData.get("facebook_url") ?? ""),
     instagram_url: String(formData.get("instagram_url") ?? ""),
     twitter_url: String(formData.get("twitter_url") ?? ""),
@@ -320,6 +322,8 @@ export async function saveSettingsAction(
     };
   }
 
-  await updateSettings(parsed.data);
+  const { signup_notify_email, ...mockSettings } = parsed.data;
+  await updateSettings(mockSettings);
+  await updateSignupNotifyEmail(signup_notify_email);
   return { success: true, message: "Settings saved." };
 }

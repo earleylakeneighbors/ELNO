@@ -2,7 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { SITE } from "@/lib/site";
 import { getSettings } from "@/lib/data";
-import { Reveal } from "@/components/motion/reveal";
+import { BOUNDARIES, parseBoundary } from "@/lib/content/neighborhood";
+
+const EXPLORE = [
+  { href: "/about", label: "About" },
+  { href: "/events", label: "Events" },
+  { href: "/news", label: "News" },
+  { href: "/join", label: "Email list" },
+  { href: "/contact", label: "Contact" },
+];
 
 export async function SiteFooter() {
   const settings = await getSettings();
@@ -13,95 +21,83 @@ export async function SiteFooter() {
   ].filter((s) => s.href);
 
   return (
-    <Reveal
-      as="footer"
-      className="mt-auto border-t border-border bg-muted/40"
-      rootMargin="0px 0px 0px 0px"
-    >
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
-        <div>
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/elno-logo.png"
-              alt=""
-              width={36}
-              height={36}
-              className="h-9 w-9 rounded-full object-cover"
-            />
-            <p className="font-display text-lg text-foreground">{SITE.name}</p>
-          </div>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            {SITE.description}
-          </p>
-          <p className="mt-3 text-sm text-muted-foreground">{SITE.location}</p>
-        </div>
-
-        <div>
-          <p className="text-sm font-medium text-foreground">Explore</p>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>
-              <Link href="/about" className="hover:text-foreground">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/events" className="hover:text-foreground">
-                Events
-              </Link>
-            </li>
-            <li>
-              <Link href="/news" className="hover:text-foreground">
-                News
-              </Link>
-            </li>
-            <li>
-              <Link href="/join" className="hover:text-foreground">
-                Join the email list
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover:text-foreground">
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-sm font-medium text-foreground">Stay connected</p>
-          {socials.length > 0 ? (
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    className="hover:text-foreground"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="placeholder-editable mt-3 text-sm">
-              Social links will appear here once added in admin settings.
+    <footer className="mt-auto overflow-hidden bg-[#1c2828] text-[#e9ece8]">
+      <div className="mx-auto max-w-7xl px-5 pt-20 sm:px-8">
+        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+          <div className="max-w-sm">
+            <Image src="/images/elno-logo.png" alt="" width={48} height={48} className="h-12 w-12 rounded-full" />
+            <p className="mt-6 font-display text-2xl leading-snug">
+              Neighbors caring for each other and for the lake we share.
             </p>
-          )}
-          <Link
-            href="/join"
-            className="mt-5 inline-block text-sm font-medium text-primary hover:underline"
-          >
-            Join our email list →
-          </Link>
+          </div>
+
+          <FooterColumn title="Explore">
+            {EXPLORE.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="transition-colors hover:text-white">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </FooterColumn>
+
+          <FooterColumn title="Our boundaries">
+            {BOUNDARIES.map(parseBoundary).map((b) => (
+              <li key={b.road} className="flex gap-3">
+                <span className="w-3 text-xs font-semibold text-white/40">{b.side[0]}</span>
+                {b.road}
+              </li>
+            ))}
+          </FooterColumn>
+
+          <FooterColumn title="Get in touch">
+            {settings.contact_email ? (
+              <li>
+                <a href={`mailto:${settings.contact_email}`} className="break-all transition-colors hover:text-white">
+                  {settings.contact_email}
+                </a>
+              </li>
+            ) : null}
+            <li>
+              <Link href="/contact" className="transition-colors hover:text-white">
+                Send us a note
+              </Link>
+            </li>
+            {socials.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                  {s.label}
+                </a>
+              </li>
+            ))}
+            <li className="pt-2 text-white/50">{settings.location || SITE.location}</li>
+          </FooterColumn>
+        </div>
+
+        <div className="flex flex-col gap-2 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {SITE.name}
+          </p>
+          <p>{SITE.tagline}</p>
         </div>
       </div>
-      <div className="border-t border-border">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-muted-foreground sm:px-6 lg:px-8">
-          © {new Date().getFullYear()} {SITE.name}. Built for neighbors in Burnsville, MN.
-        </p>
-      </div>
-    </Reveal>
+
+      <p
+        aria-hidden
+        className="select-none whitespace-nowrap text-center font-display leading-[0.8] tracking-tight text-white/[0.06]"
+        style={{ fontSize: "clamp(4rem, 17vw, 16rem)" }}
+      >
+        Earley Lake
+      </p>
+    </footer>
+  );
+}
+
+function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">{title}</p>
+      <ul className="mt-5 space-y-2.5 text-[15px] text-white/80">{children}</ul>
+    </div>
   );
 }

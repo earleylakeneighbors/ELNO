@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { format, startOfWeek, subDays, subWeeks } from "date-fns";
 import {
   getDashboardStats,
   getMessages,
+  getSubscribers,
   getUpcomingEventsLive,
 } from "@/lib/data";
-import { DashboardStatCards } from "@/components/admin/dashboard/stat-cards";
+import { getAdminIdentity } from "@/lib/auth/admin-identity";
+import { DashboardHero } from "@/components/admin/dashboard/hero";
+import { DashboardStatCards, type WeeklySignups } from "@/components/admin/dashboard/stat-cards";
 import { DashboardRecentMessages } from "@/components/admin/dashboard/recent-messages";
 import { DashboardUpcomingEvents } from "@/components/admin/dashboard/upcoming-events";
 import { DashboardQuickActions } from "@/components/admin/dashboard/quick-actions";
@@ -16,29 +20,49 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
+const WEEKS = 12;
+
+function weeklySignups(dates: string[]): WeeklySignups {
+  const thisWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const buckets = Array.from({ length: WEEKS }, (_, i) => {
+    const start = subWeeks(thisWeek, WEEKS - 1 - i);
+    return { start, label: format(start, "MMM d"), count: 0 };
+  });
+  for (const iso of dates) {
+    const t = new Date(iso).getTime();
+    for (let i = buckets.length - 1; i >= 0; i--) {
+      if (t >= buckets[i].start.getTime()) {
+        buckets[i].count++;
+        break;
+      }
+    }
+  }
+  return buckets.map(({ label, count }) => ({ label, count }));
+}
+
 export default async function AdminDashboardPage() {
-  const [stats, messages, events] = await Promise.all([
+  const [stats, messages, events, subscribers, admin] = await Promise.all([
     getDashboardStats(),
     getMessages(),
     getUpcomingEventsLive(5),
+    getSubscribers(),
+    getAdminIdentity(),
   ]);
+
+  const created = subscribers.map((s) => s.created_at);
+  const monthAgo = subDays(new Date(), 30).getTime();
+  const newThisMonth = created.filter((d) => new Date(d).getTime() >= monthAgo).length;
+  const next = events[0] ?? null;
 
   return (
     <div className="space-y-8">
-      <header>
-        <p className="text-sm font-medium uppercase tracking-wider text-primary">
-          Overview
-        </p>
-        <h1 className="mt-1 font-display text-3xl text-foreground sm:text-4xl">
-          Dashboard
-        </h1>
-        <p className="mt-2 max-w-xl text-muted-foreground">
-          Live snapshot of Earley Lake neighborhood activity across email, events,
-          news, and messages.
-        </p>
-      </header>
+      <DashboardHero
+        name={admin?.name || null}
+        unread={stats.unreadMessages}
+        nextEvent={next ? { id: next.id, title: next.title, start_at: next.start_at } : null}
+      />
 
-      <DashboardStatCards stats={stats} />
+      <DashboardStatCards stats={stats} weeks={weeklySignups(created)} newThisMonth={newThisMonth} />
 
       <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <DashboardRecentMessages messages={messages.slice(0, 5)} />

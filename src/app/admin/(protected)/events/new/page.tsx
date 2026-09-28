@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { EventForm } from "@/components/admin/event-form";
+import { PageHeader } from "@/components/admin/page-header";
+import { BackLink } from "@/components/admin/back-link";
 
 export const metadata: Metadata = {
   title: "New Event",
@@ -9,7 +11,8 @@ export const metadata: Metadata = {
 export default function NewEventPage() {
   return (
     <div>
-      <h1 className="font-display text-3xl">New event</h1>
+      <BackLink href="/admin/events" label="All events" />
+      <PageHeader eyebrow="Events" title="New event" description="Save as a draft while you plan, then publish when it's ready." />
       <div className="mt-8">
         <EventForm />
       </div>

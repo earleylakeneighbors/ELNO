@@ -79,6 +79,7 @@ export interface SiteSettings {
   tagline: string;
   location: string;
   contact_email: string;
+  signup_notify_email: string;
   facebook_url: string;
   instagram_url: string;
   twitter_url: string;

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { AlertTriangle } from "lucide-react";
 import { listAdminUsers } from "@/lib/data";
 import { UsersClient } from "@/components/admin/users-client";
+import { PageHeader } from "@/components/admin/page-header";
 
 export const metadata: Metadata = {
   title: "User Management",
@@ -21,21 +23,18 @@ export default async function AdminUsersPage() {
   }
 
   return (
-    <div>
-      <header>
-        <h1 className="font-display text-3xl">User management</h1>
-        <p className="mt-2 text-muted-foreground">
-          Manage who can access the Earley Lake admin dashboard.
-        </p>
-      </header>
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow="System"
+        title="Admins"
+        description="The people who can sign in and manage the Earley Lake website."
+      />
       {loadError ? (
-        <p className="mt-6 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {loadError}
+        <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4" /> {loadError}
         </p>
       ) : null}
-      <div className="mt-8">
-        <UsersClient users={users} />
-      </div>
+      <UsersClient users={users} />
     </div>
   );
 }
