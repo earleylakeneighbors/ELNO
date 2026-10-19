@@ -5,7 +5,7 @@ import {
   INAUGURAL_LIBRARY_EVENT_FLYER_PDF,
   INAUGURAL_LIBRARY_EVENT_SLUG,
 } from "@/lib/events/constants";
-import { formatDate, formatTime } from "@/lib/utils";
+import { formatEventDate, formatEventTimeRange } from "@/lib/events/time";
 import { ArticleShell } from "@/components/site/article-shell";
 import { ArrowLink } from "@/components/site/arrow-link";
 import { SITE } from "@/lib/site";
@@ -82,10 +82,10 @@ export default async function EventDetailPage({ params }: Props) {
         title={event.title}
         image={event.image_url}
         facts={[
-          { label: "Date", value: formatDate(event.start_at) },
+          { label: "Date", value: formatEventDate(event.start_at) },
           {
             label: "Time",
-            value: `${formatTime(event.start_at)}${event.end_at ? ` – ${formatTime(event.end_at)}` : ""}`,
+            value: formatEventTimeRange(event.start_at, event.end_at),
           },
           { label: "Where", value: event.location },
         ]}

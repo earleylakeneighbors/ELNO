@@ -1,9 +1,9 @@
 import type { HoverListItem } from "@/components/site/hover-image-list";
 import type { Event } from "@/lib/types";
-import { formatDate, formatTime } from "@/lib/utils";
+import { formatEventDate, formatEventTime } from "@/lib/events/time";
 
 export function eventScheduleMeta(event: Event): string {
-  return `${formatDate(event.start_at)} · ${formatTime(event.start_at)}`;
+  return `${formatEventDate(event.start_at)} · ${formatEventTime(event.start_at)} CT`;
 }
 
 export function eventToHoverListItem(event: Event): HoverListItem {

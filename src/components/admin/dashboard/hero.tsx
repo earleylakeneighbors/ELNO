@@ -8,6 +8,7 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { LakeScene } from "@/components/admin/illustrations";
 import { openCommandPalette } from "@/components/admin/command-palette";
+import { formatEventMonthDay } from "@/lib/events/time";
 
 function subscribeToMinute(onChange: () => void) {
   const id = setInterval(onChange, 60_000);
@@ -73,7 +74,7 @@ export function DashboardHero({
                 <Link href={`/admin/events/${nextEvent.id}`} className="font-semibold text-foreground underline decoration-primary/40 decoration-2 underline-offset-4 hover:decoration-primary">
                   {nextEvent.title}
                 </Link>{" "}
-                is coming up on {format(new Date(nextEvent.start_at), "MMM d")}.
+                is coming up on {formatEventMonthDay(nextEvent.start_at)}.
               </>
             ) : (
               <>. No events are on the calendar yet.</>

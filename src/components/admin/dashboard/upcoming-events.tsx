@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { differenceInCalendarDays, format } from "date-fns";
+import { differenceInCalendarDays } from "date-fns";
+import { formatEventScheduleCompact } from "@/lib/events/time";
 import { ArrowRight, MapPin } from "lucide-react";
 import type { Event } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ export function DashboardUpcomingEvents({ events }: { events: Event[] }) {
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium text-foreground">{e.title}</span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                    {format(new Date(e.start_at), "EEE · h:mm a")}
+                    {formatEventScheduleCompact(e.start_at)}
                     {e.location ? (
                       <>
                         <span aria-hidden>·</span>

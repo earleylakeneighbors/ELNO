@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { getEventDateTileParts } from "@/lib/events/time";
 import { cn } from "@/lib/utils";
 
 /** Tear-off calendar tile: month band over a big day number. */
@@ -13,7 +13,7 @@ export function DateTile({
   muted?: boolean;
   className?: string;
 }) {
-  const d = new Date(iso);
+  const { month, day, weekday } = getEventDateTileParts(iso);
   return (
     <span
       className={cn(
@@ -31,13 +31,13 @@ export function DateTile({
           highlight ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
         )}
       >
-        {format(d, "MMM")}
+        {month}
       </span>
       <span suppressHydrationWarning className="py-1 text-xl font-semibold leading-none tabular-nums text-foreground">
-        {format(d, "d")}
+        {day}
       </span>
       <span suppressHydrationWarning className="pb-1 text-[9px] font-medium uppercase text-muted-foreground">
-        {format(d, "EEE")}
+        {weekday}
       </span>
     </span>
   );

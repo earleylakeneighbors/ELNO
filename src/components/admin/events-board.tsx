@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { format } from "date-fns";
 import { Clock, ExternalLink, MapPin, Pencil, Search } from "lucide-react";
+import { formatEventScheduleLine } from "@/lib/events/time";
 import type { Event } from "@/lib/types";
 import { AnimatedTabs } from "@/components/ui/animated-tabs";
 import { StatusPill, contentStatusTone } from "@/components/ui/status-pill";
@@ -124,7 +124,7 @@ export function EventsBoard({ events }: { events: Event[] }) {
                     <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1" suppressHydrationWarning>
                         <Clock className="h-3.5 w-3.5" />
-                        {format(new Date(e.start_at), "EEE, MMM d · h:mm a")}
+                        {formatEventScheduleLine(e.start_at)}
                       </span>
                       {e.location ? (
                         <span className="inline-flex items-center gap-1">
