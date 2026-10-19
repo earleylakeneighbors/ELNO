@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getEventBySlug, getPastEvents, getPublishedEvents } from "@/lib/data";
+import {
+  INAUGURAL_LIBRARY_EVENT_FLYER_PDF,
+  INAUGURAL_LIBRARY_EVENT_SLUG,
+} from "@/lib/events/constants";
 import { formatDate, formatTime } from "@/lib/utils";
 import { ArticleShell } from "@/components/site/article-shell";
 import { ArrowLink } from "@/components/site/arrow-link";
@@ -92,7 +96,21 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
         }
       >
-        {event.description}
+        <div className="space-y-4 whitespace-pre-line leading-relaxed text-muted-foreground">
+          {event.description}
+        </div>
+        {slug === INAUGURAL_LIBRARY_EVENT_SLUG ? (
+          <p className="mt-8">
+            <a
+              href={INAUGURAL_LIBRARY_EVENT_FLYER_PDF}
+              className="font-medium text-primary underline-offset-4 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download event flyer (PDF)
+            </a>
+          </p>
+        ) : null}
       </ArticleShell>
     </>
   );

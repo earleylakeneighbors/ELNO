@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   createEvent,
@@ -135,16 +136,19 @@ export async function saveEventAction(
   if (id) {
     const updated = await updateEvent(id, payload);
     if (!updated) return { success: false, error: "Event not found." };
+    revalidatePath("/", "layout");
     return { success: true, data: { id }, message: "Event saved." };
   }
 
   const created = await createEvent(payload);
+  revalidatePath("/", "layout");
   return { success: true, data: { id: created.id }, message: "Event created." };
 }
 
 export async function deleteEventAction(id: string): Promise<ActionResult> {
   await requireAdmin();
   const ok = await deleteEvent(id);
+  if (ok) revalidatePath("/", "layout");
   return ok
     ? { success: true, message: "Event deleted." }
     : { success: false, error: "Could not delete event." };

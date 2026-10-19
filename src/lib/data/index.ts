@@ -36,87 +36,17 @@ export async function updateSettings(patch: Partial<SiteSettings>): Promise<Site
 
 export { getSignupNotifyEmail, updateSignupNotifyEmail } from "./signup-notify-settings";
 
-// ——— Events ———
-
-export async function getPublishedEvents(): Promise<Event[]> {
-  return store.events
-    .filter((e) => e.status === "published" || e.status === "archived")
-    .sort((a, b) => new Date(b.start_at).getTime() - new Date(a.start_at).getTime())
-    .map((e) => structuredClone(e));
-}
-
-export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
-  const now = Date.now();
-  const list = store.events
-    .filter((e) => e.status === "published" && new Date(e.start_at).getTime() >= now)
-    .sort((a, b) => new Date(a.start_at).getTime() - new Date(b.start_at).getTime());
-  return (limit ? list.slice(0, limit) : list).map((e) => structuredClone(e));
-}
-
-export async function getPastEvents(): Promise<Event[]> {
-  const now = Date.now();
-  return store.events
-    .filter(
-      (e) =>
-        (e.status === "published" || e.status === "archived") &&
-        new Date(e.start_at).getTime() < now,
-    )
-    .sort((a, b) => new Date(b.start_at).getTime() - new Date(a.start_at).getTime())
-    .map((e) => structuredClone(e));
-}
-
-export async function getEventBySlug(slug: string): Promise<Event | null> {
-  const event = store.events.find(
-    (e) => e.slug === slug && (e.status === "published" || e.status === "archived"),
-  );
-  return event ? structuredClone(event) : null;
-}
-
-export async function getAllEventsAdmin(): Promise<Event[]> {
-  return store.events
-    .slice()
-    .sort((a, b) => new Date(b.start_at).getTime() - new Date(a.start_at).getTime())
-    .map((e) => structuredClone(e));
-}
-
-export async function getEventById(id: string): Promise<Event | null> {
-  const event = store.events.find((e) => e.id === id);
-  return event ? structuredClone(event) : null;
-}
-
-export async function createEvent(
-  data: Omit<Event, "id" | "created_at" | "updated_at">,
-): Promise<Event> {
-  const now = new Date().toISOString();
-  const event: Event = {
-    ...data,
-    id: newId("evt"),
-    created_at: now,
-    updated_at: now,
-  };
-  store.events.unshift(event);
-  return structuredClone(event);
-}
-
-export async function updateEvent(
-  id: string,
-  patch: Partial<Omit<Event, "id" | "created_at">>,
-): Promise<Event | null> {
-  const idx = store.events.findIndex((e) => e.id === id);
-  if (idx === -1) return null;
-  store.events[idx] = {
-    ...store.events[idx],
-    ...patch,
-    updated_at: new Date().toISOString(),
-  };
-  return structuredClone(store.events[idx]);
-}
-
-export async function deleteEvent(id: string): Promise<boolean> {
-  const before = store.events.length;
-  store.events = store.events.filter((e) => e.id !== id);
-  return store.events.length < before;
-}
+export {
+  getPublishedEvents,
+  getUpcomingEvents,
+  getPastEvents,
+  getEventBySlug,
+  getAllEventsAdmin,
+  getEventById,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+} from "./events";
 
 // ——— News ———
 

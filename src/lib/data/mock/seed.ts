@@ -51,142 +51,35 @@ export const seedSubscribers: Subscriber[] = [
   },
 ];
 
+import {
+  INAUGURAL_LIBRARY_EVENT_SLUG,
+} from "@/lib/events/constants";
+
+const inauguralLibraryDescription = `Join your neighbors for our inaugural neighborhood event — a Little Free Library dedication at Day Park.
+
+Celebrate the new Little Free Library and learn about the new Day Park signs. Please bring a gently used or new book for the Little Free Library.
+
+Complimentary Taco John's tacos, coffee, cocoa, and water will be provided by the Earley Lake Neighborhood Organization.
+
+Come meet your neighbors and celebrate together!`;
+
 export const seedEvents: Event[] = [
   {
-    id: "evt-1",
-    title: "Summer Block Party",
-    slug: "summer-block-party",
-    description:
-      "Join neighbors for an evening of food, games, and conversation. Bring a dish to share if you can — or just bring yourself. All residents and friends are welcome.",
-    location: "Neighborhood park pavilion — [Editable: exact address]",
-    start_at: "2026-09-12T17:00:00.000Z",
-    end_at: "2026-09-12T21:00:00.000Z",
-    image_url: "/images/event-block-party.jpg",
-    status: "draft",
-    created_at: "2026-07-01T12:00:00.000Z",
-    updated_at: "2026-07-01T12:00:00.000Z",
-  },
-  {
-    id: "evt-2",
-    title: "Lakeside Cleanup Morning",
-    slug: "lakeside-cleanup-morning",
-    description:
-      "Help keep our shoreline welcoming. Gloves and bags provided. Meet at the trailhead for a short briefing, then we'll work together along the path.",
-    location: "Earley Lake trailhead — [Editable: exact meeting point]",
-    start_at: "2026-09-27T09:00:00.000Z",
-    end_at: "2026-09-27T11:30:00.000Z",
-    image_url: "/images/event-cleanup.jpg",
-    status: "draft",
-    created_at: "2026-07-10T12:00:00.000Z",
-    updated_at: "2026-07-10T12:00:00.000Z",
-  },
-  {
-    id: "evt-3",
-    title: "Fall Neighborhood Meetup",
-    slug: "fall-neighborhood-meetup",
-    description:
-      "A casual evening to share updates, hear from neighbors, and plan fall activities together. Light refreshments provided.",
-    location: "Community gathering space — [Editable]",
-    start_at: "2026-10-18T18:30:00.000Z",
-    end_at: "2026-10-18T20:00:00.000Z",
-    image_url: "/images/community-gathering.jpg",
-    status: "draft",
-    created_at: "2026-08-01T12:00:00.000Z",
-    updated_at: "2026-08-01T12:00:00.000Z",
-  },
-  {
-    id: "evt-4",
-    title: "Spring Planting Day",
-    slug: "spring-planting-day",
-    description:
-      "Past event: neighbors planted flowers and refreshed shared garden beds around the neighborhood.",
-    location: "Neighborhood garden beds",
-    start_at: "2026-05-10T10:00:00.000Z",
-    end_at: "2026-05-10T13:00:00.000Z",
-    image_url: "/images/gallery-volunteers.jpg",
-    status: "draft",
-    created_at: "2026-04-01T12:00:00.000Z",
-    updated_at: "2026-05-11T12:00:00.000Z",
-  },
-  {
-    id: "evt-5",
-    title: "Draft: Winter Social",
-    slug: "draft-winter-social",
-    description: "Placeholder draft event for admin testing. Not visible on the public site.",
-    location: "TBD",
-    start_at: "2027-01-15T18:00:00.000Z",
-    end_at: "2027-01-15T20:00:00.000Z",
-    image_url: "/images/gallery-winter.jpg",
-    status: "draft",
-    created_at: "2026-08-15T12:00:00.000Z",
-    updated_at: "2026-08-15T12:00:00.000Z",
+    id: "evt-inaugural-library",
+    title: "Little Free Library Dedication",
+    slug: INAUGURAL_LIBRARY_EVENT_SLUG,
+    description: inauguralLibraryDescription,
+    location: "Day Park pavilion, Burnsville, MN",
+    start_at: "2026-11-14T20:00:00.000Z",
+    end_at: "2026-11-14T22:00:00.000Z",
+    image_url: "/images/poster-hero-ducks.jpg",
+    status: "published",
+    created_at: "2026-10-19T12:00:00.000Z",
+    updated_at: "2026-10-19T12:00:00.000Z",
   },
 ];
 
-export const seedNews: NewsPost[] = [
-  {
-    id: "news-1",
-    title: "Welcome to Our New Neighborhood Website",
-    slug: "welcome-to-our-new-website",
-    excerpt:
-      "We're glad you're here. This site is our shared place for announcements, events, and ways to stay connected.",
-    content: `We're excited to launch the Earley Lake Neighborhood Organization website — a simple, welcoming home for neighbors to stay informed and involved.
-
-Here you can:
-- Join our email list for updates
-- See upcoming community events
-- Read neighborhood announcements
-- Reach us through the contact form
-
-[Editable: Add a short welcome message from organizers when ready.]
-
-Thank you for being part of Earley Lake.`,
-    featured_image_url: "/images/hero-lake.jpg",
-    author_id: "admin-1",
-    author_name: "Earley Lake Organizers",
-    status: "published",
-    published_at: "2026-08-01T12:00:00.000Z",
-    created_at: "2026-08-01T12:00:00.000Z",
-    updated_at: "2026-08-01T12:00:00.000Z",
-  },
-  {
-    id: "news-2",
-    title: "How to Stay Connected This Season",
-    slug: "how-to-stay-connected-this-season",
-    excerpt:
-      "A quick guide to joining the email list, attending events, and sharing ideas with the organization.",
-    content: `Staying involved is simple:
-
-1. Join the email list so you hear about gatherings and important notices.
-2. Check the Events page for dates and details.
-3. Use the Contact form if you have questions or ideas.
-
-[Editable: Add seasonal specifics when available.]
-
-Your participation helps strengthen Earley Lake for everyone.`,
-    featured_image_url: "/images/community-gathering.jpg",
-    author_id: "admin-1",
-    author_name: "Earley Lake Organizers",
-    status: "published",
-    published_at: "2026-08-10T12:00:00.000Z",
-    created_at: "2026-08-10T12:00:00.000Z",
-    updated_at: "2026-08-10T12:00:00.000Z",
-  },
-  {
-    id: "news-3",
-    title: "Draft: Neighborhood Meeting Notes",
-    slug: "draft-neighborhood-meeting-notes",
-    excerpt: "Draft announcement — not published.",
-    content: "Placeholder draft content for admin testing.",
-    featured_image_url: null,
-    author_id: "admin-1",
-    author_name: "Earley Lake Organizers",
-    status: "draft",
-    published_at: null,
-    created_at: "2026-08-18T12:00:00.000Z",
-    updated_at: "2026-08-18T12:00:00.000Z",
-  },
-];
+export const seedNews: NewsPost[] = [];
 
 export const seedMessages: ContactMessage[] = [
   {

@@ -7,9 +7,12 @@ import { WildlifeMosaic } from "@/components/site/wildlife-mosaic";
 import { NewsIndex } from "@/components/site/news-index";
 import { NeighborhoodMap } from "@/components/site/neighborhood-map";
 import { ArrowLink, Eyebrow } from "@/components/site/arrow-link";
-import { possibleEvents } from "@/lib/content/possible-events";
 import { MISSION, VISION, WILDLIFE_GALLERY } from "@/lib/content/neighborhood";
-import { getPublishedNews } from "@/lib/data";
+import { getPublishedNews, getUpcomingEvents } from "@/lib/data";
+import { eventToHoverListItem } from "@/lib/events/display";
+
+// Hourly, so past events drop out of "upcoming".
+export const revalidate = 3600;
 
 const COMMITMENTS = [
   {
@@ -27,7 +30,7 @@ const COMMITMENTS = [
 ];
 
 export default async function HomePage() {
-  const news = await getPublishedNews(3);
+  const [news, upcomingEvents] = await Promise.all([getPublishedNews(3), getUpcomingEvents()]);
 
   return (
     <>
@@ -74,17 +77,29 @@ export default async function HomePage() {
           <div>
             <Eyebrow>Gatherings</Eyebrow>
             <h2 className="mt-6 font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-light leading-[1.05] tracking-[-0.02em]">
-              What we&apos;re planning
+              {upcomingEvents.length > 0 ? "Upcoming gathering" : "Gatherings"}
             </h2>
           </div>
           <p className="max-w-sm text-muted-foreground">
-            Dates aren&apos;t set yet. Neighbors on the email list hear first when they are.
+            {upcomingEvents.length > 0
+              ? "Confirmed dates and details for neighborhood events."
+              : "Nothing scheduled right now. Neighbors on the email list hear first when dates are set."}
           </p>
         </div>
-        <HoverImageList
-          className="mt-14"
-          items={possibleEvents.map((e) => ({ ...e, meta: "Date to come", href: "/events" }))}
-        />
+        {upcomingEvents.length > 0 ? (
+          <HoverImageList
+            className="mt-14"
+            items={upcomingEvents.map((e) => eventToHoverListItem(e))}
+          />
+        ) : (
+          <p className="mt-14 rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
+            Check back soon, or{" "}
+            <a href="/join" className="font-medium text-primary underline-offset-4 hover:underline">
+              join the email list
+            </a>{" "}
+            for announcements.
+          </p>
+        )}
       </section>
 
       {/* The place */}
