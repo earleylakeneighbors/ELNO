@@ -142,6 +142,15 @@ export {
 } from "./cron-keepalive-logs";
 export type { CronKeepaliveLogInsert, CronKeepaliveLogListResult } from "./cron-keepalive-logs";
 
+export {
+  insertEmailBlastBatchWithDeliveries,
+  listEmailBlastBatches,
+  getEmailBlastBatchWithDeliveries,
+  isEmailBlastLogsConfigured,
+  EMAIL_BLAST_LOG_PAGE_SIZE,
+} from "./email-blast-logs";
+export type { EmailBlastBatchListResult, EmailBlastBatchInsert } from "./email-blast-logs";
+
 // ——— Media ———
 
 export async function getMedia(): Promise<MediaItem[]> {

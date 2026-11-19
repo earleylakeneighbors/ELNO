@@ -2,11 +2,16 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Check, ExternalLink, Megaphone, Search, ShieldAlert, ShieldCheck } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { LIBRARY_DEDICATION_NEWS_SLUG } from "@/lib/content/library-dedication-announcement";
-import { sendAnnouncementBlastAction } from "@/lib/actions/admin-email-blast";
+import {
+  sendAnnouncementBlastAction,
+  type BlastDeliverySummary,
+} from "@/lib/actions/admin-email-blast";
+import { StatusPill } from "@/components/ui/status-pill";
 import type { AnnouncementBlastContent } from "@/lib/email/announcement-presets";
 import type { Subscriber } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -71,6 +76,8 @@ export function EmailBlastClient({
   const [selected, setSelected] = useState<Set<string>>(validInitial);
   const [subject, setSubject] = useState(announcement.defaultSubject);
   const [sending, setSending] = useState(false);
+  const [lastSend, setLastSend] = useState<BlastDeliverySummary[] | null>(null);
+  const router = useRouter();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -119,10 +126,26 @@ export function EmailBlastClient({
       });
       if (!result.success) {
         toast.error(result.error);
+        if (result.data?.deliveries?.length) {
+          setLastSend(
+            [...result.data.deliveries].sort((a, b) =>
+              a.status === b.status ? 0 : a.status === "failed" ? -1 : 1,
+            ),
+          );
+          router.refresh();
+        }
         return false;
       }
       toast.success(result.message);
+      if (result.data?.deliveries) {
+        setLastSend(
+          [...result.data.deliveries].sort((a, b) =>
+            a.status === b.status ? 0 : a.status === "failed" ? -1 : 1,
+          ),
+        );
+      }
       setSelected(new Set());
+      router.refresh();
       return true;
     } finally {
       setSending(false);
@@ -205,6 +228,40 @@ export function EmailBlastClient({
             )}
           </ul>
         </div>
+
+        {lastSend && lastSend.length > 0 ? (
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+            <div className="border-b border-border px-4 py-3">
+              <h3 className="text-sm font-semibold text-foreground">Last send results</h3>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                {lastSend.filter((d) => d.status === "sent").length} sent ·{" "}
+                {lastSend.filter((d) => d.status === "failed").length} failed
+              </p>
+            </div>
+            <div className="max-h-64 overflow-y-auto">
+              <table className="w-full text-left text-sm">
+                <tbody className="divide-y divide-border">
+                  {lastSend.map((d) => (
+                    <tr key={`${d.email}-${d.status}`} className="px-4">
+                      <td className="px-4 py-2">
+                        <span className="block font-medium">{d.name}</span>
+                        <span className="text-xs text-muted-foreground">{d.email}</span>
+                      </td>
+                      <td className="px-4 py-2">
+                        <StatusPill tone={d.status === "sent" ? "success" : "danger"}>
+                          {d.status === "sent" ? "Sent" : "Failed"}
+                        </StatusPill>
+                      </td>
+                      <td className="px-4 py-2 text-xs text-muted-foreground">
+                        {d.error ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="space-y-4 lg:sticky lg:top-24">

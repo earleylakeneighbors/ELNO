@@ -101,3 +101,34 @@ export interface CronKeepaliveLog {
   has_row: boolean | null;
   detail: string | null;
 }
+
+export type EmailBlastDeliveryStatus = "sent" | "failed";
+
+export interface EmailBlastBatch {
+  id: string;
+  send_token: string;
+  preset: string;
+  subject: string;
+  recipient_count: number;
+  sent_count: number;
+  failed_count: number;
+  created_at: string;
+}
+
+export interface EmailBlastDelivery {
+  id: string;
+  batch_id: string;
+  subscriber_id: string | null;
+  email: string;
+  recipient_name: string;
+  status: EmailBlastDeliveryStatus;
+  error_message: string | null;
+  resend_id: string | null;
+  retry_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export type EmailBlastBatchWithDeliveries = EmailBlastBatch & {
+  deliveries: EmailBlastDelivery[];
+};

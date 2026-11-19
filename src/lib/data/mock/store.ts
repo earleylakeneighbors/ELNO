@@ -1,5 +1,7 @@
 import type {
   ContactMessage,
+  EmailBlastBatch,
+  EmailBlastDelivery,
   Event,
   MediaItem,
   NewsPost,
@@ -26,6 +28,8 @@ class MockStore {
   messages: ContactMessage[] = structuredClone(seedMessages);
   media: MediaItem[] = structuredClone(seedMedia);
   settings: SiteSettings = structuredClone(defaultSettings);
+  emailBlastBatches: EmailBlastBatch[] = [];
+  emailBlastDeliveries: EmailBlastDelivery[] = [];
   adminSession = false;
 }
 

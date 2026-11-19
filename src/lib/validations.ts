@@ -65,6 +65,11 @@ export const announcementBlastSchema = z.object({
   send_token: z.string().uuid(),
 });
 
+export const retryEmailBlastSchema = z.object({
+  batch_id: z.string().min(1),
+  send_token: z.string().uuid(),
+});
+
 export const settingsSchema = z.object({
   org_name: z.string().min(2).max(160),
   tagline: z.string().max(240),
@@ -78,4 +83,4 @@ export const settingsSchema = z.object({
 
 export type ActionResult<T = undefined> =
   | { success: true; data?: T; message?: string }
-  | { success: false; error: string; fieldErrors?: Record<string, string[]> };
+  | { success: false; error: string; fieldErrors?: Record<string, string[]>; data?: T };

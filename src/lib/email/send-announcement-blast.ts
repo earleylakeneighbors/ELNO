@@ -3,6 +3,7 @@ import {
   getAnnouncementBlastContent,
   type AnnouncementBlastPreset,
 } from "./announcement-presets";
+import { sendWithRateLimit } from "./send-with-rate-limit";
 import { SITE } from "@/lib/site";
 import { getResendClient, getResendFromAddress } from "./resend";
 
@@ -10,7 +11,11 @@ export function isResendConfigured(): boolean {
   return Boolean(getResendClient() && getResendFromAddress());
 }
 
-export type SendAnnouncementToOneResult = { ok: boolean };
+export type SendAnnouncementToOneResult = {
+  ok: boolean;
+  resendId?: string;
+  error?: string;
+};
 
 export async function sendAnnouncementToOne(input: {
   to: string;
@@ -23,10 +28,10 @@ export async function sendAnnouncementToOne(input: {
   const from = getResendFromAddress();
 
   if (!resend || !from) {
-    console.error(
-      "sendAnnouncementToOne skipped: RESEND_API_KEY or RESEND_FROM_EMAIL is not configured.",
-    );
-    return { ok: false };
+    return {
+      ok: false,
+      error: "Resend is not configured (API key or from address).",
+    };
   }
 
   const email = input.to.toLowerCase().trim();
@@ -45,34 +50,30 @@ export async function sendAnnouncementToOne(input: {
     "Earley Lake Neighborhood Organization · Burnsville, MN",
   ].join("\n");
 
-  try {
-    const { data, error } = await resend.emails.send(
-      {
-        from,
-        to: [email],
-        subject: input.subject,
-        react: AnnouncementBlastEmail({
-          firstName: input.firstName,
-          siteUrl,
-          announcementTitle: content.title,
-          announcementExcerpt: content.excerpt,
-          announcementUrl: content.url,
-          heroImageUrl: content.heroImageUrl,
-        }),
-        text,
-      },
-      { idempotencyKey: input.idempotencyKey },
-    );
+  const payload = {
+    from,
+    to: [email],
+    subject: input.subject,
+    react: AnnouncementBlastEmail({
+      firstName: input.firstName,
+      siteUrl,
+      announcementTitle: content.title,
+      announcementExcerpt: content.excerpt,
+      announcementUrl: content.url,
+      heroImageUrl: content.heroImageUrl,
+    }),
+    text,
+  };
 
-    if (error) {
-      console.error("sendAnnouncementToOne failed", email, error.message);
-      return { ok: false };
-    }
+  const result = await sendWithRateLimit(() =>
+    resend.emails.send(payload, { idempotencyKey: input.idempotencyKey }),
+  );
 
-    console.info("sendAnnouncementToOne sent", email, data?.id);
-    return { ok: true };
-  } catch (err) {
-    console.error("sendAnnouncementToOne unexpected error", email, err);
-    return { ok: false };
+  if (!result.ok) {
+    console.error("sendAnnouncementToOne failed", email, result.error);
+    return { ok: false, error: result.error };
   }
+
+  console.info("sendAnnouncementToOne sent", email, result.resendId);
+  return { ok: true, resendId: result.resendId };
 }
