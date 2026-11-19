@@ -5,6 +5,7 @@ import {
   CalendarDays,
   Newspaper,
   Mail,
+  Megaphone,
   Images,
   FolderOpen,
   Settings,
@@ -31,6 +32,13 @@ export const NAV_GROUPS: { label: string; links: AdminLink[] }[] = [
     label: "Community",
     links: [
       { href: "/admin/subscribers", label: "Email List", short: "Email", icon: Users, keywords: "subscribers export people" },
+      {
+        href: "/admin/email-blast",
+        label: "Send announcement",
+        short: "Blast",
+        icon: Megaphone,
+        keywords: "blast email newsletter announcement",
+      },
       { href: "/admin/events", label: "Events", short: "Events", icon: CalendarDays, keywords: "calendar gatherings" },
       { href: "/admin/news", label: "News", short: "News", icon: Newspaper, keywords: "posts announcements" },
     ],

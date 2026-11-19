@@ -14,6 +14,7 @@ export function ArticleShell({
   lede,
   facts,
   image,
+  imageAlt,
   children,
   footer,
 }: {
@@ -24,6 +25,7 @@ export function ArticleShell({
   lede?: string;
   facts?: { label: string; value: ReactNode }[];
   image?: string | null;
+  imageAlt?: string;
   children: ReactNode;
   footer?: ReactNode;
 }) {
@@ -59,7 +61,7 @@ export function ArticleShell({
       {image ? (
         <Rise delay={0.2} className="mx-auto mt-12 max-w-6xl px-5 sm:px-8">
           <div className="relative aspect-[16/9] overflow-hidden rounded-sm bg-muted">
-            <Image src={image} alt="" fill priority sizes="(min-width: 1152px) 1100px, 100vw" className="object-cover" />
+            <Image src={image} alt={imageAlt ?? ""} fill priority sizes="(min-width: 1152px) 1100px, 100vw" className="object-cover" />
           </div>
         </Rise>
       ) : null}

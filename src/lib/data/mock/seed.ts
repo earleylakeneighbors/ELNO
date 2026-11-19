@@ -54,6 +54,14 @@ export const seedSubscribers: Subscriber[] = [
 import {
   INAUGURAL_LIBRARY_EVENT_SLUG,
 } from "@/lib/events/constants";
+import {
+  LIBRARY_DEDICATION_FEATURED_IMAGE,
+  LIBRARY_DEDICATION_NEWS_CONTENT,
+  LIBRARY_DEDICATION_NEWS_EXCERPT,
+  LIBRARY_DEDICATION_NEWS_PUBLISHED_AT,
+  LIBRARY_DEDICATION_NEWS_SLUG,
+  LIBRARY_DEDICATION_NEWS_TITLE,
+} from "@/lib/content/library-dedication-announcement";
 
 const inauguralLibraryDescription = `Join your neighbors for our inaugural neighborhood event — a Little Free Library dedication at Day Park.
 
@@ -79,7 +87,22 @@ export const seedEvents: Event[] = [
   },
 ];
 
-export const seedNews: NewsPost[] = [];
+export const seedNews: NewsPost[] = [
+  {
+    id: "news-library-dedication-2026",
+    title: LIBRARY_DEDICATION_NEWS_TITLE,
+    slug: LIBRARY_DEDICATION_NEWS_SLUG,
+    excerpt: LIBRARY_DEDICATION_NEWS_EXCERPT,
+    content: LIBRARY_DEDICATION_NEWS_CONTENT,
+    featured_image_url: LIBRARY_DEDICATION_FEATURED_IMAGE,
+    author_id: null,
+    author_name: "Anne McLarnen",
+    status: "published",
+    published_at: LIBRARY_DEDICATION_NEWS_PUBLISHED_AT,
+    created_at: "2026-11-15T14:00:00.000Z",
+    updated_at: "2026-11-15T14:00:00.000Z",
+  },
+];
 
 export const seedMessages: ContactMessage[] = [
   {

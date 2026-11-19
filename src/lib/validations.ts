@@ -55,6 +55,16 @@ export const createAdminSchema = z.object({
     .max(72),
 });
 
+export const announcementBlastSchema = z.object({
+  subscriber_ids: z
+    .array(z.string().min(1))
+    .min(1, "Select at least one recipient.")
+    .max(100, "You can send to at most 100 people per batch."),
+  subject: z.string().min(3).max(160).optional(),
+  preset: z.enum(["library-dedication"]),
+  send_token: z.string().uuid(),
+});
+
 export const settingsSchema = z.object({
   org_name: z.string().min(2).max(160),
   tagline: z.string().max(240),

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
 import { formatDistanceToNowStrict, subDays } from "date-fns";
@@ -16,6 +17,7 @@ import {
   Mail,
   Search,
   ShieldCheck,
+  Megaphone,
   Sparkles,
   Trash2,
   UserPlus,
@@ -97,6 +99,7 @@ function Checkbox({
 }
 
 export function SubscribersClient({ subscribers }: { subscribers: Row[] }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SubscriberSort>("newest");
   const [rows, setRows] = useState(subscribers);
@@ -433,6 +436,15 @@ export function SubscribersClient({ subscribers }: { subscribers: Row[] }) {
                 className="rounded-lg px-2.5 py-1.5 text-sm text-background/70 transition-colors hover:bg-background/10 hover:text-background"
               >
                 Clear
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/admin/email-blast?ids=${[...selected].map(encodeURIComponent).join(",")}`)
+                }
+                className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                <Megaphone className="h-4 w-4" /> Send announcement
               </button>
               <ConfirmDialog
                 title={`Remove ${selected.size} ${selected.size === 1 ? "person" : "people"}?`}
